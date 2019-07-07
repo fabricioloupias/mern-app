@@ -5,7 +5,7 @@ const UserSchema = new Schema({
     id: mongoose.Types.ObjectId,
     name: String,
     lastName: String,
-    email: String,
+    email: {type: String, unique: true},
     department: {type: String},
     sector: {type: String},
     mobileNumber: {type: String},
