@@ -20,6 +20,7 @@ app.use(express.json());
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/posts', require('./routes/postRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // Static files
 app.use(express.static(path.join(__dirname, '../public')))
