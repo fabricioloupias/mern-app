@@ -1,34 +1,53 @@
 import React, { Component, Fragment } from 'react';
-import {
-    Card, CardImg, CardText, CardBody,
-    CardTitle, CardSubtitle, Button
-} from 'reactstrap';
-import { Container, Row, Col } from 'reactstrap';
+import { Alert, Form, FormGroup, Label, Input, TabContent, TabPane, Nav, NavItem, NavLink, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { Card, Button, TextField } from '@material-ui/core';
+import { Container } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styles from './loginRegister.css';
+import { login } from '../../actions/authActions';
+import { register } from '../../actions/authActions';
+import { clearErrors } from '../../actions/errorActions';
+import './loginRegister.css';
+import classnames from 'classnames';
+
 
 class LoginRegister extends Component {
-    state = {
-        modal: false,
-        name: '',
-        email: '',
-        password: '',
-        msg: null
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeTab: '1',
+            name: '',
+            email: '',
+            password: '',
+            msg: null
+        };
+
+
+    }
+
+    toggleTab(tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({
+                activeTab: tab
+            });
+            this.props.clearErrors();
+        }
+    }
 
     static propTypes = {
         isAuthenticated: PropTypes.bool,
         error: PropTypes.object.isRequired,
         register: PropTypes.func.isRequired,
+        login: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired
     };
+
 
     componentDidUpdate(prevProps) {
         const { error, isAuthenticated } = this.props;
         if (error !== prevProps.error) {
             // Check for register error
-            if (error.id === 'REGISTER_FAIL') {
+            if (error.id === 'REGISTER_FAIL' || error.id === 'LOGIN_FAIL') {
                 this.setState({ msg: error.msg.message });
             } else {
                 this.setState({ msg: null });
@@ -43,19 +62,26 @@ class LoginRegister extends Component {
         }
     }
 
-    toggle = () => {
-        // Clear errors
-        this.props.clearErrors();
+    onChange = e => {
         this.setState({
-            modal: !this.state.modal
+            [e.target.name]: e.target.value
         });
     };
 
-    onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
-    };
+    onSubmitLogin = e => {
+        e.preventDefault();
+        const { email, password } = this.state;
 
-    onSubmit = e => {
+        const user = {
+            email,
+            password
+        };
+        // Attempt to login
+        this.props.login(user);
+        this.props.clearErrors();
+    }
+
+    onSubmitRegister = e => {
         e.preventDefault();
 
         const { name, email, password } = this.state;
@@ -69,6 +95,7 @@ class LoginRegister extends Component {
 
         // Attempt to register
         this.props.register(newUser);
+        this.props.clearErrors();
     };
 
     render() {
@@ -76,15 +103,101 @@ class LoginRegister extends Component {
             <div id="loginRegister">
                 <Container>
                     <Row className="justify-content-center align-items-center">
-                        <Col md="8">
-                            <Card>
-                                <CardImg top width="100%" src="https://placeholdit.imgix.net/~text?txtsize=33&txt=318%C3%97180&w=318&h=180" alt="Card image cap" />
-                                <CardBody>
-                                    <CardTitle>Card title</CardTitle>
-                                    <CardSubtitle>Card subtitle</CardSubtitle>
-                                    <CardText>Some quick example text to build on the card title and make up the bulk of the card's content.</CardText>
-                                    <Button>Button</Button>
-                                </CardBody>
+                        <Col lg="6" md="8" sm="8">
+                            <Card className="p-3">
+                                <Nav tabs className="mb-4">
+                                    <NavItem>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '1' })}
+                                            onClick={() => { this.toggleTab('1'); }}
+                                        >
+                                            Login
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavLink
+                                            className={classnames({ active: this.state.activeTab === '2' })}
+                                            onClick={() => { this.toggleTab('2'); }}
+                                        >
+                                            Register
+                                        </NavLink>
+                                    </NavItem>
+                                </Nav>
+                                <TabContent activeTab={this.state.activeTab}>
+                                    <TabPane tabId="1">
+                                        {this.state.msg ? (
+                                            <Alert color='danger'>{this.state.msg}</Alert>
+                                        ) : null}
+                                        <Form className="mt-3">
+                                            <FormGroup className="text-left">
+                                                <TextField
+                                                    id="outlined-name"
+                                                    label="Email"
+                                                    name="email"
+                                                    onChange={this.onChange}
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    type="email"
+                                                    fullWidth
+                                                />
+                                                <TextField
+                                                    id="outlined-name"
+                                                    label="Password"
+                                                    name="password"
+                                                    onChange={this.onChange}
+                                                    margin="normal"
+                                                    variant="outlined"
+                                                    type="password"
+                                                    fullWidth
+                                                />
+                                                <Button variant="contained" color="primary" onClick={this.onSubmitLogin} style={{ marginTop: '2rem' }}>
+                                                    Login
+                                                </Button>
+                                            </FormGroup>
+                                        </Form>
+                                    </TabPane>
+                                    <TabPane tabId="2">
+                                        {this.state.msg ? (
+                                            <Alert color='danger'>{this.state.msg}</Alert>
+                                        ) : null}
+                                        <Form onSubmit={this.onSubmitRegister} className="mt-3">
+                                            <FormGroup className="text-left">
+                                                <Label for='name'>Name</Label>
+                                                <Input
+                                                    type='text'
+                                                    name='name'
+                                                    id='name'
+                                                    placeholder='Name'
+                                                    className='mb-3'
+                                                    onChange={this.onChange}
+                                                />
+
+                                                <Label for='email'>Email</Label>
+                                                <Input
+                                                    type='email'
+                                                    name='email'
+                                                    id='email'
+                                                    placeholder='Email'
+                                                    className='mb-3'
+                                                    onChange={this.onChange}
+                                                />
+
+                                                <Label for='password'>Password</Label>
+                                                <Input
+                                                    type='password'
+                                                    name='password'
+                                                    id='password'
+                                                    placeholder='Password'
+                                                    className='mb-3'
+                                                    onChange={this.onChange}
+                                                />
+                                                <Button variant="contained" color="primary" style={{ marginTop: '2rem' }}>
+                                                    Register
+                                                </Button>
+                                            </FormGroup>
+                                        </Form>
+                                    </TabPane>
+                                </TabContent>
                             </Card>
                         </Col>
                     </Row>
@@ -134,16 +247,17 @@ class LoginRegister extends Component {
                         </Form>
                     </ModalBody>
                 </Modal> */}
-            </div>
+            </div >
         );
     }
 }
 
 const mapStateToProps = state => ({
     auth: state.auth,
+    error: state.error
 });
 
 export default connect(
     mapStateToProps,
-    null
+    { login, register, clearErrors }
 )(LoginRegister);

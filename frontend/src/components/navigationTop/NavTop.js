@@ -11,9 +11,10 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import RegisterModal from './auth/RegisterModal';
-import LoginModal from './auth/LoginModal';
-import Logout from './auth/Logout';
+import RegisterModal from '../auth/RegisterModal';
+import LoginModal from '../auth/LoginModal';
+import Logout from '../auth/Logout';
+import NavDrawer from './NavDrawer'
 
 class NavTop extends Component {
 
@@ -37,6 +38,7 @@ class NavTop extends Component {
             <div>
                 <Navbar color='dark' dark expand='sm' className='mb-5'>
                     <Container>
+                        <NavDrawer />
                         <NavbarBrand href='/'>Intranet</NavbarBrand>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>

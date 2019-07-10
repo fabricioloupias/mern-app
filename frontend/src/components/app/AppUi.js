@@ -3,21 +3,26 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 //Components
-import NavTop from '../NavTop';
+import NavTop from '../navigationTop/NavTop';
 import PostsFeed from '../PostsFeed';
 import LoginRegister from '../login-register/LoginRegister'
 
-class AppUi extends Component{
+class AppUi extends Component {
     static propTypes = {
         auth: PropTypes.object.isRequired
     };
 
-    render(){
+    render() {
         const { isAuthenticated } = this.props.auth;
-        return(
+        return (
             <>
-                <LoginRegister />
-                {console.log(isAuthenticated)}
+                {!isAuthenticated ?
+                    <LoginRegister /> :
+                    <div>
+                        <NavTop />
+                        <PostsFeed />
+                    </div>
+                }
             </>
         )
     }
