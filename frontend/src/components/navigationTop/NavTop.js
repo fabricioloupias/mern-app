@@ -36,7 +36,7 @@ class NavTop extends Component {
         return (
             <div>
                 <Navbar color='dark' dark expand='sm' className='mb-5'>
-                    <Container>
+                    <Container fluid>
                         <NavbarBrand href='/'>Intranet</NavbarBrand>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>

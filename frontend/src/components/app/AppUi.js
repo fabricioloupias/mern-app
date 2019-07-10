@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import NavTop from '../navigationTop/NavTop';
 import PostsFeed from '../PostsFeed';
 import LoginRegister from '../login-register/LoginRegister'
+import { Container, Row, Col } from 'reactstrap';
+import NavLeft from '../navLeft/NavLeft'
 
 class AppUi extends Component {
     static propTypes = {
@@ -20,7 +22,17 @@ class AppUi extends Component {
                     <LoginRegister /> :
                     <div>
                         <NavTop />
-                        <PostsFeed />
+                        <Container fluid>
+                            <Row>
+                                <Col lg="2" md="2">
+                                  <NavLeft />  
+                                </Col>
+                                <Col md="7">
+                                <PostsFeed />
+                                </Col>
+                            </Row>
+                        </Container>
+                        
                     </div>
                 }
             </>
