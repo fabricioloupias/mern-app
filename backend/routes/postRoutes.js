@@ -31,10 +31,12 @@ router.post('/', async (req, res) => {
         _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         description: req.body.description,
-        createdAd: Date.now(),
+        createdAt: Date.now(),
         urlImg: req.body.urlImg,
         titleImg: req.body.titleImg,
-        createdBy: req.body.createdBy
+        createdBy: req.body.createdBy,
+        userId: mongoose.Schema.ObjectId(),
+        userUrlImg: req.body.userUrlImg
     });
     await post.save()
         .then(result => {
@@ -99,7 +101,7 @@ router.patch('/:postId', async (req, res) => {
 })
 
 //Delete post by id
-router.delete('/postId', async (req, res) => {
+router.delete('/:postId', async (req, res) => {
     const id = req.params.postId;
     PostModel.findByIdAndDelete(id)
         .then(result => {

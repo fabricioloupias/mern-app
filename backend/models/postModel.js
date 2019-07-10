@@ -6,10 +6,12 @@ const PostSchema = new Schema({
     title: {type: String, required: true},
     description: String,
     likes: Number,
-    createdAd: Date,
+    createdAt: Date,
     urlImg: String,
     titleImg: String,
-    createdBy: mongoose.Schema.Types.ObjectId
+    createdBy: String,
+    userId: mongoose.Schema.ObjectId,
+    userUrlImg: String,
 })
 
 module.exports = mongoose.model('Post', PostSchema)

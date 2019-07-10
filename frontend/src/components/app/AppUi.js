@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 //Components
 import NavTop from '../navigationTop/NavTop';
-import PostsFeed from '../PostsFeed';
+import PostsFeed from '../feed/PostsFeed';
 import LoginRegister from '../login-register/LoginRegister'
 import { Container, Row, Col } from 'reactstrap';
 import NavLeft from '../navLeft/NavLeft'
@@ -27,7 +27,9 @@ class AppUi extends Component {
                                 <Col lg="2" md="2">
                                   <NavLeft />  
                                 </Col>
-                                <Col md="7">
+                                <Col lg="1">
+                                </Col>
+                                <Col md="6">
                                 <PostsFeed />
                                 </Col>
                             </Row>
